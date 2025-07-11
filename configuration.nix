@@ -177,6 +177,7 @@
   python3Packages.django
   cmake
   valgrind
+  man-pages
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
