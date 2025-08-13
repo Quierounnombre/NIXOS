@@ -168,6 +168,7 @@
   environment.systemPackages = with pkgs; [
 	vscode
 	vim
+  linuxHeaders
   gnumake
   gcc
   git
