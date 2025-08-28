@@ -137,9 +137,14 @@
   cmake
   valgrind
   man-pages
-	vscode
   gnumake 
-	git
+  vscode
+  linuxHeaders
+  gnumake
+  git
+  brave
+  traceroute
+  wireshark
   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
