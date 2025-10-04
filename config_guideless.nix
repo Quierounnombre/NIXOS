@@ -62,7 +62,7 @@
   users.users.vicente = {
     isNormalUser = true;
     description = "vicente";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [];
     shell = pkgs.zsh;
   };
@@ -105,6 +105,9 @@
     "gitconfig".mode = "0644";
   };
   
+
+
+
    programs = 
   {
     zsh =
@@ -159,6 +162,10 @@
   #  wget
   ];
 
+  virtualisation.docker = {
+	enable = true;
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -174,6 +181,7 @@
 
   # Open ports in the firewall.
 	networking.firewall.allowedTCPPorts = [ 22 ];
+	networking.firewall.allowedTCPPorts = [ 8080 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
