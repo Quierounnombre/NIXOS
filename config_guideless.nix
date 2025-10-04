@@ -16,6 +16,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernel.sysctl = {
+	"net.ipv6.conf.all.disable_ipv6" = "1";
+  };
+
   networking.hostName = "vicxos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -25,6 +29,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.enableIPv6 = false;
 
   # Set your time zone.
   time.timeZone = "Europe/Madrid";
@@ -149,6 +154,8 @@
   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   nodejs_24
   typescript
+  go
+  docker
   #  wget
   ];
 
