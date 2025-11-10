@@ -46,7 +46,6 @@
     layout = "es";
   };
 
-
   # Printing
   services.printing.enable = false;
 
@@ -93,6 +92,11 @@
     {
 	enable = true;
     };
+    vim = 
+    {
+	enable = true;
+	defaultEditor = true;
+    };
   };
 
   # Browsers
@@ -126,11 +130,42 @@
   linux							# Linux
   ];
 
+  # Create vimrc file
+  system.activationScripts.createFile = {
+    text = ''
+	cat <<'EOF' > /home/vicente/.vimrc
+"---GENERAL---"
+set number
+set ruler
+set undolevels=1000
+set backspace=indent,eol,start
+set virtualedit=all
+set showmatch
+set encoding=utf-8
+set relativenumber
+syntax enable
+"---SEARCH---"
+set hlsearch
+set smartcase
+set ignorecase
+set incsearch
+"---TABS---"
+set autoindent
+set smarttab
+set softtabstop=4
+set smartindent
+set shiftwidth=4
+"---UI---"
+set title
+set background=dark
+EOF
+      chmod 0644 /home/vicente/.vimrc
+    '';
+  };
+
   # Enviroment vars
   environment.variables = {
     GTK_THEME = "Adwaita:dark"; #Dark theme
-    VIM = "/etc/vim/vimrc";
-    PRUEBA = "HOLA";
   };
 
   # Docker
@@ -175,35 +210,6 @@
         submodulesummary = true
     '';
     "gitconfig".mode = "0644";
-    "/.config/vim/vimrc" = {
-        text = 
-	''
-	#GENERAL
-	set number			# Show line numbers
-	set no wrap			# Wrap lines
-	set textwidth=100		# Line wrap (number of cols)
-	set showmatch			# Highlight matching brace
-	set spell			# Enable spell-checking
-	set virtualedit=all		# Enable free-range cursor
-	set ruler			# Show row and column ruler information
-	set undolevels=1000		# Number of undo levels
-	set backspace=indent,eol,start	# Backspace behaviour
-
- 	#SEARCH
-	set hlsearch			# Highlight all search results
-	set smartcase			# Enable smart-case search
-	set ignorecase			# Always case-insensitive
-	set incsearch			# Searches for strings incrementally
- 
-	#INDENTATION
-	set autoindent			# Auto-indent new lines
-	set shiftwidth=4		# Number of auto-indent spaces
-	set smartindent			# Enable smart-indent
-	set smarttab			# Enable smart-tabs
-	set softtabstop=4		# Number of spaces per Tab
-	set noexpandtab
-	'';
-     };
   };
 
   # Firmware attemp
