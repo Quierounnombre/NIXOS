@@ -126,9 +126,11 @@
   linux							# Linux
   ];
 
-  # Dark theme
+  # Enviroment vars
   environment.variables = {
-    GTK_THEME = "Adwaita:dark";
+    GTK_THEME = "Adwaita:dark"; #Dark theme
+    VIM = "/etc/vim/vimrc";
+    PRUEBA = "HOLA";
   };
 
   # Docker
@@ -173,6 +175,35 @@
         submodulesummary = true
     '';
     "gitconfig".mode = "0644";
+    "/.config/vim/vimrc" = {
+        text = 
+	''
+	#GENERAL
+	set number			# Show line numbers
+	set no wrap			# Wrap lines
+	set textwidth=100		# Line wrap (number of cols)
+	set showmatch			# Highlight matching brace
+	set spell			# Enable spell-checking
+	set virtualedit=all		# Enable free-range cursor
+	set ruler			# Show row and column ruler information
+	set undolevels=1000		# Number of undo levels
+	set backspace=indent,eol,start	# Backspace behaviour
+
+ 	#SEARCH
+	set hlsearch			# Highlight all search results
+	set smartcase			# Enable smart-case search
+	set ignorecase			# Always case-insensitive
+	set incsearch			# Searches for strings incrementally
+ 
+	#INDENTATION
+	set autoindent			# Auto-indent new lines
+	set shiftwidth=4		# Number of auto-indent spaces
+	set smartindent			# Enable smart-indent
+	set smarttab			# Enable smart-tabs
+	set softtabstop=4		# Number of spaces per Tab
+	set noexpandtab
+	'';
+     };
   };
 
   # Firmware attemp
