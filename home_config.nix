@@ -131,9 +131,13 @@
   ];
 
   # Create vimrc file
-  system.activationScripts.createFile = {
+  system.activationScripts.create_vimrc = {
     text = ''
 	cat <<'EOF' > /home/vicente/.vimrc
+echo "I use vim"
+echo "(•_•)"
+echo "( •_•)>⌐■-■"
+echo "(⌐■_■)"
 "---GENERAL---"
 set number
 set ruler
@@ -158,10 +162,53 @@ set shiftwidth=4
 "---UI---"
 set title
 set background=dark
+set wildmenu
 EOF
       chmod 0644 /home/vicente/.vimrc
     '';
   };
+
+  # Create vim plugins
+  system.activationScripts.create_vimplugins = {
+    text = ''
+	cat <<'EOF' > /home/vicente/.vim/plugins.vim
+    let s:plugin_dir = expand('~/.vim/plugged')
+
+function! s:ensure(repo)
+  let name = split(a:repo, '/')[-1]
+  let path = s:plugin_dir . '/' . name
+
+  if !isdirectory(path)
+    if !isdirectory(s:plugin_dir)
+      call mkdir(s:plugin_dir, 'p')
+    endif
+    execute '!${pkgs.git}/bin/git clone --depth=1 https://github.com/' . a:repo . ' ' . shellescape(path)
+  endif
+
+  execute 'set runtimepath+=' . fnameescape(path)
+endfunction
+
+call s:ensure('ghifarit53/tokyonight-vim')
+call s:ensure('tpope/vim-fugitive')
+EOF
+      chmod 0644 /home/vicente/.vim/plugins.vim
+      rm -rf /home/vicente/.vim/plugged
+    '';
+  };
+
+  # Create a service since i need ssh to be online
+  systemd.services.install-vim-plugins = {
+    description = "Install Vim plugins after SSH is ready";
+    wantedBy = [ "default.target" ];
+    after = [ "network-online.target" "sshd.service" ];
+    wants = [ "network-online.target" "sshd.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "vicente";
+      ExecStart = "${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall";
+    };
+  };
+
 
   # Enviroment vars
   environment.variables = {
