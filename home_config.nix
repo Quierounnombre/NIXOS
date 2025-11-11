@@ -163,6 +163,14 @@ set shiftwidth=4
 set title
 set background=dark
 set wildmenu
+source ~/.vim/plugins.vim
+"---COLOR DARK+---"
+set termguicolors
+colorscheme codedark
+set background=dark
+"---UI(CURSOR BUG)---"
+set cursorline
+hi CursorLine gui=underline cterm=underline guibg=NONE ctermbg=NONE
 EOF
       chmod 0644 /home/vicente/.vimrc
     '';
@@ -188,8 +196,12 @@ function! s:ensure(repo)
   execute 'set runtimepath+=' . fnameescape(path)
 endfunction
 
-call s:ensure('ghifarit53/tokyonight-vim')
+"INSTALL THE PLUGGINS"
+call s:ensure('tomasiser/vim-code-dark')
 call s:ensure('tpope/vim-fugitive')
+
+"UPDATE THE MANUALS"
+helptags ALL
 EOF
       chmod 0644 /home/vicente/.vim/plugins.vim
       rm -rf /home/vicente/.vim/plugged
