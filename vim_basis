@@ -1,0 +1,60 @@
+#MOVEMENT
+
+     ^
+     k
+  < h.l >
+     j
+     \/
+
+w   -> next beggining of a word
+e   -> next end of a word
+b   -> previous beggining of a word
+gg  -> start of file
+G   -> end of file
+zz  -> set cursor in the middle of the screen
+0   -> jump to start of line
+$   -> jumo to end of lin
+
+Number + G = Go to line of number
+
+#EDITING
+
+i   -> insert before the cursor
+a   -> inset after the cursor
+o   -> newline under the current one
+O   -> newline over the current one
+
+u   -> undo
+p   -> paste
+
+this cmds allow for number + cmd
+d   -> delete
+y   -> copy
+
+#FIND & REPLACE
+
+/pattern    -> search for a pattern
+n	    -> advance forward looking for pattern
+N	    -> advance backwards looking for pattern
+:noh	    -> stop pattern
+
+:%s/old/new/g	-> replace all the instances of old, with new
+:%s/old/new/gc	-> replace all the instances of old, with new, with confirmation
+
+#FILE NAVIGATION
+
+:tabnew + file	-> open a new tab with the selected file
+gt		-> go to the 
+number + gt	-> go to the indicated tab
+:tabm + number  -> move current tab to pos of number, index of 0 
+:tabc + number	-> close indicated tab
+:tabo		-> close all but the current one
+:Ex		-> open file browser
+
+#FUGITIVE
+
+:G	    -> go into the fugitive menu, inside said menu:
+		>'s' for adding
+		>'u' for unstage
+		>'U' for mass unstage
+:G + cmd    -> execute said vim cmd

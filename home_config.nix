@@ -171,6 +171,12 @@ set background=dark
 "---UI(CURSOR BUG)---"
 set cursorline
 hi CursorLine gui=underline cterm=underline guibg=NONE ctermbg=NONE
+"---STATUSLINE---"
+set laststatus=2
+set statusline =
+hi User1 guifg=#ff4444 guibg=NONE
+hi User2 guifg=#00ffff guibg=NONE
+set statusline=%2*%f\ %h%m%r%=%y\ L:%l:%c:C\ %p%%\ %1*%{FugitiveStatusline()}%*
 EOF
       chmod 0644 /home/vicente/.vimrc
     '';
