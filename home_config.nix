@@ -16,10 +16,11 @@
   boot.kernelModules = [ "mt7921e" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [ "quiet" "loglevel=3" ];  
+  boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; #NEEDED for virtualbox
 
   # Network
   networking.networkmanager.enable = true;
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "vicxos";
   networking.firewall.enable = true;
 
   # Localization
@@ -47,7 +48,7 @@
   };
 
   # Printing
-  services.printing.enable = false;
+  services.printing.enable = true;
 
   # Sound
   services.pulseaudio.enable = false;
@@ -63,7 +64,7 @@
   users.users.vicente = {
     isNormalUser = true;
     description = "Vicente";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" ];
     packages = with pkgs; [
     ];
     shell = pkgs.zsh;
@@ -97,10 +98,11 @@
 	enable = true;
 	defaultEditor = true;
     };
+    firefox = 
+    {
+	enable = true;
+    };
   };
-
-  # Browsers
-  programs.firefox.enable = true;
 
   # Pkgs
   environment.systemPackages = with pkgs; [
@@ -128,6 +130,8 @@
   gtk4							# Graphics
   linux-firmware					# Linux
   linux							# Linux
+  cloudflare-warp					# Networking + privacy
+  slack							# Office
   ];
 
   # Create vimrc file
@@ -185,7 +189,7 @@ EOF
   # Create vim plugins
   system.activationScripts.create_vimplugins = {
     text = ''
-	cat <<'EOF' > /home/vicente/.vim/plugins.vim
+      cat <<'EOF' > /home/vicente/.vim/plugins.vim
     let s:plugin_dir = expand('~/.vim/plugged')
 
 function! s:ensure(repo)
@@ -210,7 +214,6 @@ call s:ensure('tpope/vim-fugitive')
 helptags ALL
 EOF
       chmod 0644 /home/vicente/.vim/plugins.vim
-      rm -rf /home/vicente/.vim/plugged
     '';
   };
 
@@ -223,7 +226,11 @@ EOF
     serviceConfig = {
       Type = "oneshot";
       User = "vicente";
-      ExecStart = "${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall";
+      ExecStart = "sh -c '
+      echo rm -rf /home/vicente/.vim/plugged
+      echo ${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall
+      '
+      ";
     };
   };
 
@@ -236,6 +243,33 @@ EOF
   # Docker
   virtualisation.docker = {
 	enable = true;
+  };
+
+  #Enable VirtualBox, i just want have compatibility across systems
+  virtualisation.virtualbox.host.enable = true;
+
+  #Enable cloudflare-warp?
+  systemd.services.cloudflare-warp = {
+  wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+	ExecStart = "${pkgs.cloudflare-warp}/bin/warp-svc";
+    };
+  };
+
+  systemd.services.init-warp = {
+    description = "Initialize Cloudflare WARP non-interactively";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "cloudflare-warp.service" ];
+    serviceConfig = {
+      Type = "oneshot";	
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "init-warp.sh" ''
+        set -e
+	${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos registration delete
+	${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos registration new
+	${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos connect
+      '';
+    };
   };
 
   # Enviroment 
