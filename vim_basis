@@ -31,6 +31,9 @@ this cmds allow for number + cmd
 d   -> delete
 y   -> copy
 
+g-  -> return to previous undo
+g+  -> advance to next undo
+
 #FIND & REPLACE
 
 /pattern    -> search for a pattern
@@ -50,6 +53,7 @@ number + gt	-> go to the indicated tab
 :tabc + number	-> close indicated tab
 :tabo		-> close all but the current one
 :Ex		-> open file browser
+:qa		-> exit all tabs and windows
 
 #FUGITIVE
 
@@ -58,3 +62,15 @@ number + gt	-> go to the indicated tab
 		>'u' for unstage
 		>'U' for mass unstage
 :G + cmd    -> execute said vim cmd
+
+#NERD TREE
+
+o	    -> open in current window
+t	    -> open in a new tab
+T	    -> open in a new tab in silence
+ctrl-w w    -> change to the next window
+:NErdtree   -> Launches/closes the nerd tree
+
+#CUSTOM
+
+jk	    -> Esc
