@@ -70,6 +70,7 @@ t	    -> open in a new tab
 T	    -> open in a new tab in silence
 ctrl-w w    -> change to the next window
 :NErdtree   -> Launches/closes the nerd tree
+m			-> Opens Menu
 
 #CUSTOM
 

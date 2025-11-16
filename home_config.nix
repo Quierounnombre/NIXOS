@@ -128,6 +128,7 @@
 		docker						# Virtualisation
 		vagrant						# Virtualisation
 		virtualbox					# Virtualisation
+		k3s							# Virtualisation
 		go							# Go
 		wget						# Networking
 		iw							# Networking
@@ -200,6 +201,9 @@ let g:NERDTreeTabsShareSameTree = 1
 nnoremap <C-e> :NERDTreeToggle<CR>
 let NERDTreeWinSize = 30
 let NERDTreeShowIcons = 1
+let g:NERDTreeChDirMode=2
+autocmd DirChanged * NERDTreeRefreshRoot
+autocmd BufWritePost * NERDTreeRefreshRoot
 "---CUSTOM HOTKEYS---"
 inoremap jk <Esc>
 EOF
@@ -266,7 +270,7 @@ EOF
 		GTK_THEME = "Adwaita:dark"; #Dark theme
 	};
 
-	# Docker
+	# Virtualisation configs
 	virtualisation =
 	{
 		docker =
