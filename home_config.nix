@@ -127,7 +127,6 @@
 		nasm						# Asembly
 		docker						# Virtualisation
 		vagrant						# Virtualisation
-		virtualbox					# Virtualisation
 		k3s							# Virtualisation
 		go							# Go
 		wget						# Networking
