@@ -139,6 +139,7 @@
 		linux-firmware				# Linux
 		linux						# Linux
 		cloudflare-warp				# Networking + privacy
+		glances						# Resource Manager
 		slack						# Office
 	];
 
@@ -205,6 +206,20 @@ autocmd DirChanged * NERDTreeRefreshRoot
 autocmd BufWritePost * NERDTreeRefreshRoot
 "---CUSTOM HOTKEYS---"
 inoremap jk <Esc>
+"---INDENT_GUIDE---"
+let g:indent_guides_guide_size = 1
+let g:indent_guides_character = '│'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+augroup IndentGuidesVSCode
+  autocmd!
+  " Inactive indent guides
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesOdd  guibg=NONE guifg=#404040 ctermfg=238
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesEven guibg=NONE guifg=#404040 ctermfg=238
+
+  " Active indent guide (slightly brighter)
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesActive guibg=NONE guifg=#606060 ctermfg=244
+augroup END
 EOF
 chmod 0644 /home/vicente/.vimrc
 		'';
@@ -235,6 +250,7 @@ endfunction
 call s:ensure('tomasiser/vim-code-dark')
 call s:ensure('tpope/vim-fugitive')
 call s:ensure('preservim/nerdtree')
+call s:ensure('preservim/vim-indent-guides')
 
 "UPDATE THE MANUALS"
 helptags ALL
