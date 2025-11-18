@@ -124,6 +124,7 @@
 		brave						# Browser
 		pciutils					# Utils
 		usbutils					# Utils
+		parted						# Utils
 		nasm						# Asembly
 		docker						# Virtualisation
 		vagrant						# Virtualisation
