@@ -22,6 +22,11 @@
 	networking.networkmanager.enable = true;
 	networking.hostName = "vicxos";
 	networking.firewall.enable = true;
+	networking.extraHosts =
+	''
+		192.168.56.110	app-one.com
+		192.168.56.110	app-two.com
+	'';
 
 	# Localization
 	time.timeZone = "Europe/Madrid";
@@ -41,12 +46,17 @@
 	console.keyMap = "es";
 
 	# Graphics
-	services.xserver.enable = true;
-	services.xserver.displayManager.lightdm.enable = true;
-	services.xserver.desktopManager.cinnamon.enable = true;
-	services.xserver.xkb =
+	services.xserver =
 	{
+		enable = true;
+		displayManager.lightdm.enable = true;
+		desktopManager.cinnamon.enable = true;
+		autoRepeatDelay = 50;
+		autoRepeatInterval = 5;
+		xkb = 
+		{
 		layout = "es";
+		};
 	};
 
 	# Printing
@@ -112,37 +122,42 @@
 	# Pkgs
 	environment.systemPackages = with pkgs;
 	[
-		vim							# Editor
-		zsh							# Shell
-		man-pages					# Man
-		gcc							# C-Utils
-		valgrind					# C-Utils
-		gnumake						# C-Utils
-		linuxHeaders				# C-Utils
-		cmake						# C-Utils
-		git							# Git
-		brave						# Browser
-		pciutils					# Utils
-		usbutils					# Utils
-		parted						# Utils
-		nasm						# Asembly
-		docker						# Virtualisation
-		vagrant						# Virtualisation
-		k3s							# Virtualisation
-		go							# Go
-		wget						# Networking
-		iw							# Networking
-		traceroute					# Networking
-		wireshark					# Networking
-		networkmanager				# Networking
-		curl						# Networking
-		gtk4						# Graphics
-		linux-firmware				# Linux
-		linux						# Linux
-		cloudflare-warp				# Networking + privacy
-		glances						# Resource Manager
-		slack						# Office
-		dwarf-fortress				# Gaming
+		vim										# Editor
+		zsh										# Shell
+		man-pages								# Man
+		gcc										# C-Utils
+		valgrind								# C-Utils
+		gnumake									# C-Utils
+		linuxHeaders							# C-Utils
+		cmake									# C-Utils
+		gnumake									# C-Utils
+		git										# Git
+		brave									# Browser
+		pciutils								# Utils
+		usbutils								# Utils
+		parted									# Utils
+		unzip									# Utils
+		pkg-config								# Utils
+		libGLU									# Utils
+		libGL									# Utils
+		nasm									# Asembly
+		docker									# Virtualisation
+		vagrant									# Virtualisation
+		k3s										# Virtualisation
+		go										# Go
+		wget									# Networking
+		iw										# Networking
+		traceroute								# Networking
+		wireshark								# Networking
+		networkmanager							# Networking
+		curl									# Networking
+		gtk4									# Graphics
+		linux-firmware							# Linux
+		linux									# Linux
+		cloudflare-warp							# Networking + privacy
+		glances									# Resource Manager
+		slack									# Office
+		#dwarf-fortress							# Gaming
 	];
 
 	# Create vimrc file
