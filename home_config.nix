@@ -157,7 +157,6 @@
 		cloudflare-warp							# Networking + privacy
 		glances									# Resource Manager
 		slack									# Office
-		#dwarf-fortress							# Gaming
 	];
 
 	# Create vimrc file
