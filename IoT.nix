@@ -279,6 +279,7 @@ EOF
 		virtualbox =
 		{
 			host.enable = true;
+			guest.enable = false;
 		};
 	};
 
