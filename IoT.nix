@@ -19,7 +19,7 @@
 
 	# Network
 	networking.networkmanager.enable = true;
-	onetworking.hostName = "iot";
+	networking.hostName = "IoT";
 	networking.firewall.enable = true;
 	networking.extraHosts =
 	''
