@@ -55,7 +55,7 @@
 		autoRepeatInterval = 5;
 		xkb = 
 		{
-		layout = "es";
+			layout = "es";
 		};
 	};
 
@@ -97,10 +97,10 @@
 				theme = "robbyrussell";
 				plugins = 
 				[
-				"sudo"
-				"terraform"
-				"systemadmin"
-				"vi-mode"
+					"sudo"
+					"terraform"
+					"systemadmin"
+					"vi-mode"
 				];
 			};
 		};
@@ -108,7 +108,7 @@
 		{
 			enable = true;
 		};
-		vim = 
+		neovim = 
 		{
 			enable = true;
 			defaultEditor = true;
@@ -122,7 +122,7 @@
 	# Pkgs
 	environment.systemPackages = with pkgs;
 	[
-		vim										# Editor
+		neovim									# Editor
 		zsh										# Shell
 		man-pages								# Man
 		gcc										# C-Utils
@@ -154,6 +154,7 @@
 		gtk4									# Graphics
 		linux-firmware							# Linux
 		linux									# Linux
+		xclip									# Linux
 		cloudflare-warp							# Networking + privacy
 		glances									# Resource Manager
 		slack									# Office
@@ -163,7 +164,8 @@
 	system.activationScripts.create_vimrc =
 	{
 		text = ''
-cat <<'EOF' > /home/vicente/.vimrc
+mkdir -p /home/vicente/.config/nvim
+cat <<'EOF' > /home/vicente/.config/nvim/init.vim
 echo "I use vim"
 echo "(•_•)"
 echo "( •_•)>⌐■-■"
@@ -195,7 +197,7 @@ set tabstop=4
 set title
 set background=dark
 set wildmenu
-source ~/.vim/plugins.vim
+source /home/vicente/.config/nvim/plugins.vim
 "---COLOR DARK+---"
 set termguicolors
 colorscheme codedark
@@ -222,22 +224,35 @@ autocmd DirChanged * NERDTreeRefreshRoot
 autocmd BufWritePost * NERDTreeRefreshRoot
 "---CUSTOM HOTKEYS---"
 inoremap jk <Esc>
-"---INDENT_GUIDE---"
-let g:indent_guides_guide_size = 1
-let g:indent_guides_character = '│'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 0
-augroup IndentGuidesVSCode
-  autocmd!
-  " Inactive indent guides
-  autocmd VimEnter,Colorscheme * highlight IndentGuidesOdd  guibg=NONE guifg=#404040 ctermfg=238
-  autocmd VimEnter,Colorscheme * highlight IndentGuidesEven guibg=NONE guifg=#404040 ctermfg=238
-
-  " Active indent guide (slightly brighter)
-  autocmd VimEnter,Colorscheme * highlight IndentGuidesActive guibg=NONE guifg=#606060 ctermfg=244
-augroup END
+"---TAB_GRAPHICS---"
+set list
+set listchars=tab:\|\ ,trail:·,eol:$
+"---TERMINAL_TOGGLE---"
+nnoremap <Char-241> :call ToggleTerminal()<CR>
+tnoremap <Char-241> <C-\><C-n>:call ToggleTerminal()<CR>
+tnoremap <Esc> <C-\><C-n>:call ToggleTerminal()<CR>
+let g:terminal_bufnr = -1
+function! ToggleTerminal()
+    if bufexists(g:terminal_bufnr) && bufwinnr(g:terminal_bufnr) != -1
+        execute bufwinnr(g:terminal_bufnr) . "wincmd c"
+    else
+        if g:terminal_bufnr == -1 || !bufexists(g:terminal_bufnr)
+			botright split
+			resize 30
+			terminal
+            let g:terminal_bufnr = bufnr('%')
+        else
+			botright split
+			resize 30
+            execute "buffer " . g:terminal_bufnr
+        endif
+        startinsert
+    endif
+endfunction
+"---CLIPBOARD--"
+set clipboard+=unnamedplus
 EOF
-chmod 0644 /home/vicente/.vimrc
+chmod 0644 /home/vicente/.config/nvim/init.vim
 		'';
 	};
 
@@ -245,7 +260,7 @@ chmod 0644 /home/vicente/.vimrc
 	system.activationScripts.create_vimplugins =
 	{
 		text = ''
-		cat <<'EOF' > /home/vicente/.vim/plugins.vim
+		cat <<'EOF' > /home/vicente/.config/nvim/plugins.vim
 let s:plugin_dir = expand('~/.vim/plugged')
 
 function! s:ensure(repo)
@@ -254,7 +269,7 @@ let path = s:plugin_dir . '/' . name
 
 if !isdirectory(path)
 	if !isdirectory(s:plugin_dir)
-		call mkdir(s:plugin_dir, 'p')
+		call mkdir -p (s:plugin_dir, 'p')
 	endif
 	execute '!${pkgs.git}/bin/git clone --depth=1 https://github.com/' . a:repo . ' ' . shellescape(path)
 endif
@@ -266,7 +281,6 @@ endfunction
 call s:ensure('tomasiser/vim-code-dark')
 call s:ensure('tpope/vim-fugitive')
 call s:ensure('preservim/nerdtree')
-call s:ensure('preservim/vim-indent-guides')
 
 "UPDATE THE MANUALS"
 helptags ALL
@@ -288,7 +302,7 @@ EOF
 			User = "vicente";
 			ExecStart = "sh -c '
 			echo rm -rf /home/vicente/.vim/plugged
-			echo ${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall
+			echo ${pkgs.neovim}/bin/neovim -es -u NONE -c 'source /home/vicente/.config/nvim/plugins.vim' -c qall
 			'
 			";
 		};
