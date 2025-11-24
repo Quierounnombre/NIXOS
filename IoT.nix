@@ -19,7 +19,7 @@
 
 	# Network
 	networking.networkmanager.enable = true;
-	networking.hostName = "vicxos";
+	onetworking.hostName = "IoT";
 	networking.firewall.enable = true;
 	networking.extraHosts =
 	''
@@ -65,7 +65,7 @@
 	users.users.esta =
 	{
 		isNormalUser = true;
-		description = "Vicente";
+		description = "esta";
 		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" ];
 		packages = with pkgs;
 		[
