@@ -22,11 +22,6 @@
 	networking.networkmanager.enable = true;
 	networking.hostName = "vicxos";
 	networking.firewall.enable = true;
-	networking.extraHosts =
-	''
-		192.168.56.110	app-one.com
-		192.168.56.110	app-two.com
-	'';
 
 	# Localization
 	time.timeZone = "Europe/Madrid";

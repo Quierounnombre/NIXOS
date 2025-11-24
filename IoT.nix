@@ -15,7 +15,7 @@
 	boot.loader.efi.canTouchEfiVariables = true;
 	boot.kernelPackages = pkgs.linuxPackages_latest;
 	boot.kernelParams = [ "quiet" "loglevel=3" ];	
-	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; #NEEDED for virtualbox
+	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" "kvm-amd" ]; #NEEDED for virtualbox
 
 	# Network
 	networking.networkmanager.enable = true;
@@ -277,6 +277,16 @@ EOF
 		{
 			host.enable = true;
 		};
+	};
+
+	services.pulseaudio.enable = false;
+	security.rtkit.enable = true;
+	services.pipewire =
+	{
+		enable = true;
+		alsa.enable = true;
+		alsa.support32Bit = true;
+		pulse.enable = true;
 	};
 
 	# Enviroment 
