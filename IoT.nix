@@ -1,0 +1,339 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+
+{
+	imports =
+	[ # Include the results of the hardware scan.
+	./hardware-configuration.nix
+	];
+
+	# Bootloader.
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
+	boot.kernelPackages = pkgs.linuxPackages_latest;
+	boot.kernelParams = [ "quiet" "loglevel=3" ];	
+	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; #NEEDED for virtualbox
+
+	# Network
+	networking.networkmanager.enable = true;
+	networking.hostName = "vicxos";
+	networking.firewall.enable = true;
+	networking.extraHosts =
+	''
+		192.168.56.110	app-one.com
+		192.168.56.110	app-two.com
+	'';
+
+	# Localization
+	time.timeZone = "Europe/Madrid";
+	i18n.defaultLocale = "es_ES.UTF-8";
+	i18n.extraLocaleSettings = 
+	{
+		LC_ADDRESS = "es_ES.UTF-8";
+		LC_IDENTIFICATION = "es_ES.UTF-8";
+		LC_MEASUREMENT = "es_ES.UTF-8";
+		LC_MONETARY = "es_ES.UTF-8";
+		LC_NAME = "es_ES.UTF-8";
+		LC_NUMERIC = "es_ES.UTF-8";
+		LC_PAPER = "es_ES.UTF-8";
+		LC_TELEPHONE = "es_ES.UTF-8";
+		LC_TIME = "es_ES.UTF-8";
+	};
+	console.keyMap = "es";
+
+	# Graphics
+	services.xserver =
+	{
+		enable = true;
+		displayManager.lightdm.enable = true;
+		desktopManager.cinnamon.enable = true;
+		autoRepeatDelay = 50;
+		autoRepeatInterval = 5;
+		xkb = 
+		{
+		layout = "es";
+		};
+	};
+
+	# Printing
+	services.printing.enable = true;
+
+	# Me
+	users.users.esta =
+	{
+		isNormalUser = true;
+		description = "Vicente";
+		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" ];
+		packages = with pkgs;
+		[
+		];
+		shell = pkgs.zsh;
+	};
+
+	# Set up some programs
+	programs =
+	{
+		zsh = 
+		{
+			enable = true;
+			ohMyZsh = 
+			{
+				enable = true;
+				theme = "robbyrussell";
+				plugins = 
+				[
+				"sudo"
+				"terraform"
+				"systemadmin"
+				"vi-mode"
+				];
+			};
+		};
+		git = 
+		{
+			enable = true;
+		};
+		vim = 
+		{
+			enable = true;
+			defaultEditor = true;
+		};
+		firefox = 
+		{
+			enable = true;
+		};
+	};
+
+	# Pkgs
+	environment.systemPackages = with pkgs;
+	[
+		vim										# Editor
+		zsh										# Shell
+		man-pages								# Man
+		git										# Git
+		brave									# Browser
+		docker									# Virtualisation
+		vagrant									# Virtualisation
+		k3s										# Virtualisation
+		wget									# Networking
+		iw										# Networking
+		wireshark								# Networking
+		networkmanager							# Networking
+		curl									# Networking
+	];
+
+	# Create vimrc file
+	system.activationScripts.create_vimrc =
+	{
+		text = ''
+cat <<'EOF' > /home/vicente/.vimrc
+echo "I use vim"
+echo "(•_•)"
+echo "( •_•)>⌐■-■"
+echo "(⌐■_■)"
+"---GENERAL---"
+set number
+set ruler
+set undolevels=1000
+set backspace=indent,eol,start
+set virtualedit=all
+set showmatch
+set encoding=utf-8
+set relativenumber
+syntax enable
+"---SEARCH---"
+set hlsearch
+set smartcase
+set ignorecase
+set incsearch
+"---TABS---"
+set noexpandtab
+set autoindent
+set smarttab
+set softtabstop=0
+set smartindent
+set shiftwidth=4
+set tabstop=4
+"---UI---"
+set title
+set background=dark
+set wildmenu
+source ~/.vim/plugins.vim
+"---COLOR DARK+---"
+set termguicolors
+colorscheme codedark
+set background=dark
+"---UI(CURSOR BUG)---"
+set cursorline
+hi CursorLine gui=underline cterm=underline guibg=NONE ctermbg=NONE
+"---STATUSLINE---"
+set laststatus=2
+set statusline	=
+hi User1 guifg=#ff4444	guibg=NONE
+hi User2 guifg=#00ffff guibg=NONE
+set statusline=%2*%f\ %h%m%r%=%y\ L:%l:%c:C\ %p%%\ %1*%{FugitiveStatusline()}%*
+"---NERDTREE---"
+let g:NERDTreeHijackNetrw = 1
+let NERDTreeShowActiveFile = 1
+let g:NERDTreeTabsOpenOnNewTab = 0
+let g:NERDTreeTabsShareSameTree = 1
+nnoremap <C-e> :NERDTreeToggle<CR>
+let NERDTreeWinSize = 30
+let NERDTreeShowIcons = 1
+let g:NERDTreeChDirMode=2
+autocmd DirChanged * NERDTreeRefreshRoot
+autocmd BufWritePost * NERDTreeRefreshRoot
+"---CUSTOM HOTKEYS---"
+inoremap jk <Esc>
+"---INDENT_GUIDE---"
+let g:indent_guides_guide_size = 1
+let g:indent_guides_character = '│'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+augroup IndentGuidesVSCode
+  autocmd!
+  " Inactive indent guides
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesOdd  guibg=NONE guifg=#404040 ctermfg=238
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesEven guibg=NONE guifg=#404040 ctermfg=238
+
+  " Active indent guide (slightly brighter)
+  autocmd VimEnter,Colorscheme * highlight IndentGuidesActive guibg=NONE guifg=#606060 ctermfg=244
+augroup END
+EOF
+chmod 0644 /home/vicente/.vimrc
+		'';
+	};
+
+	# Create vim plugins
+	system.activationScripts.create_vimplugins =
+	{
+		text = ''
+		cat <<'EOF' > /home/vicente/.vim/plugins.vim
+let s:plugin_dir = expand('~/.vim/plugged')
+
+function! s:ensure(repo)
+let name = split(a:repo, '/')[-1]
+let path = s:plugin_dir . '/' . name
+
+if !isdirectory(path)
+	if !isdirectory(s:plugin_dir)
+		call mkdir(s:plugin_dir, 'p')
+	endif
+	execute '!${pkgs.git}/bin/git clone --depth=1 https://github.com/' . a:repo . ' ' . shellescape(path)
+endif
+
+execute 'set runtimepath+=' . fnameescape(path)
+endfunction
+
+"INSTALL THE PLUGGINS"
+call s:ensure('tomasiser/vim-code-dark')
+call s:ensure('tpope/vim-fugitive')
+call s:ensure('preservim/nerdtree')
+call s:ensure('preservim/vim-indent-guides')
+
+"UPDATE THE MANUALS"
+helptags ALL
+EOF
+		chmod 0644 /home/vicente/.vim/plugins.vim
+		'';
+	};
+
+	# Create a service since i need ssh to be online
+	systemd.services.install-vim-plugins =
+	{
+		description = "Install Vim plugins after SSH is ready";
+		wantedBy = [ "default.target" ];
+		after = [ "network-online.target" "sshd.service" ];
+		wants = [ "network-online.target" "sshd.service" ];
+		serviceConfig =
+		{
+			Type = "oneshot";
+			User = "vicente";
+			ExecStart = "sh -c '
+			echo rm -rf /home/vicente/.vim/plugged
+			echo ${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall
+			'
+			";
+		};
+	};
+
+
+	# Enviroment vars
+	environment.variables =
+	{
+	};
+
+	# Virtualisation configs
+	virtualisation =
+	{
+		docker =
+		{
+			enable = true;
+		};
+		virtualbox =
+		{
+			host.enable = true;
+		};
+	};
+
+	# Enviroment 
+	environment.etc =
+	{
+		"gitconfig".text =
+		''
+		[user]
+		name  = Quierounombre
+		email = vicengandrade@gmail.com
+
+		[alias]
+		lol   = log --decorate --pretty --graph --stat
+		l     = log --decorate --pretty --oneline
+		s     = status -s --ahead-behind
+		sb    = status -s --ahead-behind -b
+		ac    = add *.c *.cpp *.h Makefile
+		aa    = add *
+		c     = commit -m
+		po    = push origin
+		pom   = push origin master
+		pov   = push origin Vicente
+		pp    = push personal
+		ppm   = push personal master
+		p     = push
+		r     = remote
+		b     = branch
+		ra    = remote add
+		rp    = remote add personal
+		ro    = remote add origin
+		ch    = checkout
+		cho   = checkout master
+		chv   = checkout Vicente
+		suba  = submodule add
+		subp  = submodule update --merge --remote
+		subc  = submodule update --init --recursive
+
+		[status]
+		submodulesummary = true
+		'';
+		"gitconfig".mode = "0644";
+	};
+
+	# Firmware attemp
+	hardware.enableRedistributableFirmware = true;
+	hardware.enableAllFirmware = true;
+
+
+	# Allow unfree packages
+	nixpkgs.config.allowUnfree = true;
+
+	# This value determines the NixOS release from which the default
+	# settings for stateful data, like file locations and database versions
+	# on your system were taken. It‘s perfectly fine and recommended to leave
+	# this value at the release version of the first install of this system.
+	# Before changing this value read the documentation for this option
+	# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+	system.stateVersion	= "25.05"; # Did you read the comment?
+
+}
