@@ -123,6 +123,9 @@
 		wireshark								# Networking
 		networkmanager							# Networking
 		curl									# Networking
+		gcc										# Need for vbox
+		gnumake									# C-Utils
+		linuxHeaders							# C-Utils
 	];
 
 	# Create vimrc file
