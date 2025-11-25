@@ -15,8 +15,8 @@
 	boot.loader.efi.canTouchEfiVariables = true;
 	boot.kernelModules = [ "mt7921e" ];
 	boot.kernelPackages = pkgs.linuxPackages_latest;
-	boot.kernelParams = [ "quiet" "loglevel=3" ];	
-	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; #NEEDED for virtualbox
+	boot.kernelParams = [ "quiet" "loglevel=3" ];
+	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; # NEEDED for vbox nested virt
 
 	# Network
 	networking.networkmanager.enable = true;
@@ -46,8 +46,8 @@
 		enable = true;
 		displayManager.lightdm.enable = true;
 		desktopManager.cinnamon.enable = true;
-		autoRepeatDelay = 50;
-		autoRepeatInterval = 5;
+		autoRepeatDelay = 200;
+		autoRepeatInterval = 50;
 		xkb = 
 		{
 			layout = "es";
@@ -320,6 +320,7 @@ EOF
 		virtualbox =
 		{
 			host.enable = true;
+			host.enableExtensionPack = true;
 		};
 	};
 
