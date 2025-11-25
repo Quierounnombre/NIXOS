@@ -100,10 +100,6 @@
 			enable = true;
 			defaultEditor = true;
 		};
-		firefox = 
-		{
-			enable = true;
-		};
 	};
 
 	# Pkgs
@@ -126,6 +122,7 @@
 		gcc										# Need for vbox
 		gnumake									# C-Utils
 		linuxHeaders							# C-Utils
+		brave									# Browser
 	];
 
 	# Create vimrc file
@@ -267,6 +264,7 @@ EOF
 	# Enviroment vars
 	environment.variables =
 	{
+		GTK_THEME = "Adwaita:dark"; #Dark theme
 	};
 
 	# Virtualisation configs
