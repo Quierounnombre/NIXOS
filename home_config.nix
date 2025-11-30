@@ -234,31 +234,41 @@ tnoremap <Char-241> <C-\><C-n>:call ToggleTerminal()<CR>
 tnoremap <Esc> <C-\><C-n>:call ToggleTerminal()<CR>
 let g:terminal_bufnr = -1
 function! ToggleTerminal()
-    if bufexists(g:terminal_bufnr) && bufwinnr(g:terminal_bufnr) != -1
-        execute bufwinnr(g:terminal_bufnr) . "wincmd c"
-    else
-        if g:terminal_bufnr == -1 || !bufexists(g:terminal_bufnr)
+	if bufexists(g:terminal_bufnr) && bufwinnr(g:terminal_bufnr) != -1
+		let l:curwin = winnr()
+		execute bufwinnr(g:terminal_bufnr) . "wincmd c"
+		for w in range(1, winnr('$'))
+			execute w . "wincmd w"
+			if getbufvar(winbufnr(w), '&filetype') !=# 'nerdtree'
+				break
+			endif
+		endfor
+	else
+		if g:terminal_bufnr == -1 || !bufexists(g:terminal_bufnr)
 			botright split
 			resize 30
 			terminal
-            let g:terminal_bufnr = bufnr('%')
-        else
+			let g:terminal_bufnr = bufnr('%')
+		else
 			botright split
 			resize 30
-            execute "buffer " . g:terminal_bufnr
-        endif
-        startinsert
-    endif
+			execute "buffer " . g:terminal_bufnr
+		endif
+		startinsert
+	endif
 endfunction
 "---CLIPBOARD--"
 set clipboard+=unnamedplus
+"---CURSOR_HIGHLIGHT---"
+hi default CursorWord cterm=none gui=none ctermfg=Yellow guifg=#FFFF00
 EOF
 chmod 0644 /home/vicente/.config/nvim/init.vim
 		'';
 	};
 
 	# Create vim plugins
-	system.activationScripts.create_vimplugins =
+
+system.activationScripts.create_vimplugins =
 	{
 		text = ''
 		cat <<'EOF' > /home/vicente/.config/nvim/plugins.vim
@@ -282,6 +292,7 @@ endfunction
 call s:ensure('tomasiser/vim-code-dark')
 call s:ensure('tpope/vim-fugitive')
 call s:ensure('preservim/nerdtree')
+call s:ensure('itchyny/vim-cursorword')
 
 "UPDATE THE MANUALS"
 helptags ALL
