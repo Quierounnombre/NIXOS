@@ -13,7 +13,6 @@
 	# Bootloader.
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;
-	boot.kernelPackages = pkgs.linuxPackages_latest;
 	boot.kernelParams = [ "quiet" "loglevel=3" ];	
 	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" "kvm-amd" ]; #NEEDED for virtualbox
 
@@ -50,8 +49,8 @@
 		enable = true;
 		displayManager.lightdm.enable = true;
 		desktopManager.cinnamon.enable = true;
-		autoRepeatDelay = 50;
-		autoRepeatInterval = 5;
+		autoRepeatDelay = 100;
+		autoRepeatInterval = 25;
 		xkb = 
 		{
 		layout = "es";
@@ -101,10 +100,6 @@
 			enable = true;
 			defaultEditor = true;
 		};
-		firefox = 
-		{
-			enable = true;
-		};
 	};
 
 	# Pkgs
@@ -118,6 +113,7 @@
 		docker									# Virtualisation
 		vagrant									# Virtualisation
 		k3s										# Virtualisation
+		k3d										# Virtualisation
 		wget									# Networking
 		iw										# Networking
 		wireshark								# Networking
@@ -126,13 +122,14 @@
 		gcc										# Need for vbox
 		gnumake									# C-Utils
 		linuxHeaders							# C-Utils
+		brave									# Browser
 	];
 
 	# Create vimrc file
 	system.activationScripts.create_vimrc =
 	{
 		text = ''
-cat <<'EOF' > /home/vicente/.vimrc
+cat <<'EOF' > /home/esta/.vimrc
 echo "I use vim"
 echo "(•_•)"
 echo "( •_•)>⌐■-■"
@@ -206,7 +203,7 @@ augroup IndentGuidesVSCode
   autocmd VimEnter,Colorscheme * highlight IndentGuidesActive guibg=NONE guifg=#606060 ctermfg=244
 augroup END
 EOF
-chmod 0644 /home/vicente/.vimrc
+chmod 0644 /home/esta/.vimrc
 		'';
 	};
 
@@ -214,7 +211,7 @@ chmod 0644 /home/vicente/.vimrc
 	system.activationScripts.create_vimplugins =
 	{
 		text = ''
-		cat <<'EOF' > /home/vicente/.vim/plugins.vim
+		cat <<'EOF' > /home/esta/.vim/plugins.vim
 let s:plugin_dir = expand('~/.vim/plugged')
 
 function! s:ensure(repo)
@@ -240,7 +237,7 @@ call s:ensure('preservim/vim-indent-guides')
 "UPDATE THE MANUALS"
 helptags ALL
 EOF
-		chmod 0644 /home/vicente/.vim/plugins.vim
+		chmod 0644 /home/esta/.vim/plugins.vim
 		'';
 	};
 
@@ -254,10 +251,10 @@ EOF
 		serviceConfig =
 		{
 			Type = "oneshot";
-			User = "vicente";
+			User = "esta";
 			ExecStart = "sh -c '
-			echo rm -rf /home/vicente/.vim/plugged
-			echo ${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/vicente/.vim/plugins.vim' -c qall
+			echo rm -rf /home/esta/.vim/plugged
+		echo ${pkgs.vim}/bin/vim -es -u NONE -c 'source /home/esta/.vim/plugins.vim' -c qall
 			'
 			";
 		};
@@ -267,6 +264,7 @@ EOF
 	# Enviroment vars
 	environment.variables =
 	{
+		GTK_THEME = "Adwaita:dark"; #Dark theme
 	};
 
 	# Virtualisation configs
@@ -279,7 +277,7 @@ EOF
 		virtualbox =
 		{
 			host.enable = true;
-			guest.enable = false;
+			guest.enable = true;
 		};
 	};
 
