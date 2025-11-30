@@ -127,6 +127,7 @@
 		cmake									# C-Utils
 		gnumake									# C-Utils
 		git										# Git
+		argocd									# GitOps
 		brave									# Browser
 		pciutils								# Utils
 		usbutils								# Utils
@@ -139,6 +140,7 @@
 		docker									# Virtualisation
 		vagrant									# Virtualisation
 		k3s										# Virtualisation
+		k3d										# Virtualisation
 		go										# Go
 		wget									# Networking
 		iw										# Networking
@@ -146,6 +148,8 @@
 		wireshark								# Networking
 		networkmanager							# Networking
 		curl									# Networking
+		inetutils								# Networking
+		tcpdump									# Networking
 		gtk4									# Graphics
 		linux-firmware							# Linux
 		linux									# Linux
@@ -153,6 +157,7 @@
 		cloudflare-warp							# Networking + privacy
 		glances									# Resource Manager
 		slack									# Office
+		cockatrice								# Gaming
 	];
 
 	# Create vimrc file
@@ -174,6 +179,7 @@ set virtualedit=all
 set showmatch
 set encoding=utf-8
 set relativenumber
+set nowrap
 syntax enable
 "---SEARCH---"
 set hlsearch
