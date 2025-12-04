@@ -141,6 +141,7 @@
 		vagrant									# Virtualisation
 		k3s										# Virtualisation
 		k3d										# Virtualisation
+		kubernetes-helm							# Virtualisation
 		go										# Go
 		wget									# Networking
 		iw										# Networking
