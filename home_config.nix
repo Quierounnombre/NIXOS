@@ -122,7 +122,6 @@
 		man-pages								# Man
 		gcc										# C-Utils
 		valgrind								# C-Utils
-		gnumake									# C-Utils
 		linuxHeaders							# C-Utils
 		cmake									# C-Utils
 		gnumake									# C-Utils
@@ -155,7 +154,6 @@
 		linux-firmware							# Linux
 		linux									# Linux
 		xclip									# Linux
-		cloudflare-warp							# Networking + privacy
 		glances									# Resource Manager
 		slack									# Office
 		cockatrice								# Gaming
@@ -226,6 +224,8 @@ autocmd DirChanged * NERDTreeRefreshRoot
 autocmd BufWritePost * NERDTreeRefreshRoot
 "---CUSTOM HOTKEYS---"
 inoremap jk <Esc>
+inoremap <C-s> <Esc>:update<CR>
+nnoremap <C-s> :update<CR>
 "---TAB_GRAPHICS---"
 set list
 set listchars=tab:\|\ ,trail:·,eol:$
@@ -298,7 +298,7 @@ call s:ensure('itchyny/vim-cursorword')
 "UPDATE THE MANUALS"
 helptags ALL
 EOF
-		chmod 0644 /home/vicente/.vim/plugins.vim
+		chmod 0644 /home/vicente/.config/nvim/plugins.vim
 		'';
 	};
 
@@ -313,11 +313,7 @@ EOF
 		{
 			Type = "oneshot";
 			User = "vicente";
-			ExecStart = "sh -c '
-			echo rm -rf /home/vicente/.vim/plugged
-			echo ${pkgs.neovim}/bin/neovim -es -u NONE -c 'source /home/vicente/.config/nvim/plugins.vim' -c qall
-			'
-			";
+			ExecStart = "${pkgs.neovim}/bin/nvim -es -u NONE -c 'source /home/vicente/.config/nvim/plugins.vim' -c qall";
 		};
 	};
 
@@ -339,34 +335,6 @@ EOF
 		{
 			host.enable = true;
 			host.enableExtensionPack = true;
-		};
-	};
-
-	#Enable cloudflare-warp?
-	systemd.services.cloudflare-warp =
-	{
-		wantedBy = [ "multi-user.target" ];
-		serviceConfig =
-		{
-			ExecStart = "${pkgs.cloudflare-warp}/bin/warp-svc";
-		};
-	};
-
-	systemd.services.init-warp =
-	{
-		description = "Initialize Cloudflare WARP non-interactively";
-		wantedBy = [ "multi-user.target" ];
-		after = [ "cloudflare-warp.service" ];
-		serviceConfig =
-		{
-			Type = "oneshot";	
-			RemainAfterExit = true;
-			ExecStart = pkgs.writeShellScript "init-warp.sh" ''
-			set -e
-			${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos registration delete
-			${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos registration new
-			${pkgs.cloudflare-warp}/bin/warp-cli --accept-tos connect
-			'';
 		};
 	};
 
@@ -410,6 +378,13 @@ EOF
 		'';
 		"gitconfig".mode = "0644";
 	};
+
+	#STEAM
+
+	programs.steam.enable = true;
+
+	hardware.opengl.enable = true;
+	hardware.opengl.driSupport32Bit = true;   # required for 32-bit games
 
 	# Firmware attemp
 	hardware.enableRedistributableFirmware = true;
