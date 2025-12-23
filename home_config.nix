@@ -150,6 +150,7 @@
 		curl									# Networking
 		inetutils								# Networking
 		tcpdump									# Networking
+		postman									# Networking
 		gtk4									# Graphics
 		linux-firmware							# Linux
 		linux									# Linux
