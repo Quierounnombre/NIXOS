@@ -14,7 +14,6 @@
 	# Bootloader.
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;
-	boot.kernelModules = [ "mt7921e" ];
 	boot.kernelPackages = pkgs.linuxPackages_latest;
 	boot.kernelParams = [ "quiet" "loglevel=3" ];
 	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; # NEEDED for vbox nested virt
@@ -23,6 +22,9 @@
 	networking.networkmanager.enable = true;
 	networking.hostName = "vicxos";
 	networking.firewall.enable = true;
+
+	#Flakes
+	nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 	# Localization
 	time.timeZone = "Europe/Madrid";
@@ -47,6 +49,7 @@
 		enable = true;
 		displayManager.lightdm.enable = true;
 		desktopManager.cinnamon.enable = true;
+		videoDrivers = [ "modsetting" ];
 		autoRepeatDelay = 200;
 		autoRepeatInterval = 50;
 		xkb = 
@@ -74,7 +77,7 @@
 	{
 		isNormalUser = true;
 		description = "Vicente";
-		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" ];
+		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" "kvm" ];
 		packages = with pkgs;
 		[
 		];
@@ -118,48 +121,58 @@
 	# Pkgs
 	environment.systemPackages = with pkgs;
 	[
-		neovim									# Editor
-		zsh										# Shell
-		man-pages								# Man
-		gcc										# C-Utils
-		valgrind								# C-Utils
-		linuxHeaders							# C-Utils
-		cmake									# C-Utils
-		gnumake									# C-Utils
-		git										# Git
-		argocd									# GitOps
-		brave									# Browser
-		pciutils								# Utils
-		usbutils								# Utils
-		parted									# Utils
-		unzip									# Utils
-		pkg-config								# Utils
-		libGLU									# Utils
-		libGL									# Utils
-		nasm									# Asembly
-		docker									# Virtualisation
-		vagrant									# Virtualisation
-		k3s										# Virtualisation
-		k3d										# Virtualisation
-		kubernetes-helm							# Virtualisation
-		go										# Go
-		wget									# Networking
-		iw										# Networking
-		traceroute								# Networking
-		wireshark								# Networking
-		networkmanager							# Networking
-		curl									# Networking
-		inetutils								# Networking
-		tcpdump									# Networking
-		postman									# Networking
-		sshfs									# Networking
-		gtk4									# Graphics
-		linux-firmware							# Linux
-		linux									# Linux
-		xclip									# Linux
-		glances									# Resource Manager
-		slack									# Office
-		cockatrice								# Gaming
+		neovim										# Editor
+		zsh											# Shell
+		man-pages									# Man
+		gcc											# C-Utils
+		valgrind									# C-Utils
+		linuxHeaders								# C-Utils
+		cmake										# C-Utils
+		gnumake										# C-Utils
+		zlib										# C-Utils
+		openssl										# C-Utils
+		git											# Git
+		argocd										# GitOps
+		brave										# Browser
+		pciutils									# Utils
+		usbutils									# Utils
+		parted										# Utils
+		unzip										# Utils
+		pkg-config									# Utils
+		libGLU										# Utils
+		libGL										# Utils
+		nasm										# Asembly
+		docker										# Virtualisation
+		vagrant										# Virtualisation
+		k3s											# Virtualisation
+		k3d											# Virtualisation
+		kubernetes-helm								# Virtualisation
+		go											# Go
+		wget										# Networking
+		iw											# Networking
+		traceroute									# Networking
+		wireshark									# Networking
+		networkmanager								# Networking
+		curl										# Networking
+		inetutils									# Networking
+		tcpdump										# Networking
+		postman										# Networking
+		sshfs										# Networking
+		gtk4										# Graphics
+		linux-firmware								# Linux
+		linux										# Linux
+		xclip										# Linux
+		raspberrypi-eeprom							# Raspb
+		nixos-install-tools							# Raspb Nixos
+		rpi-imager									# Raspb imager
+		glances										# Resource Manager
+		slack										# Office
+		cockatrice									# Gaming
+		libreoffice									# Productivity
+		typescript									# Typscript
+		nerd-fonts.fira-code						# NerdFonts
+		godotPackages_4_6.godot-mono				# Godot with c#
+		telegram-desktop							# Telegram
 	];
 
 	# Enviroment vars
@@ -234,6 +247,10 @@
 	hardware.enableRedistributableFirmware = true;
 	hardware.enableAllFirmware = true;
 
+	# Fix graphics emulator
+	hardware.graphics = {
+		enable = true;
+	};
 
 	# Allow unfree packages
 	nixpkgs.config.allowUnfree = true;
