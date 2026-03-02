@@ -57,6 +57,13 @@
 			layout = "es";
 		};
 	};
+	security.polkit.enable = true;
+	services.gnome.gnome-keyring.enable = true;
+	xdg.portal = {
+		enable = true;
+		extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+		config.common.default = "gtk";
+	};
 
 	# Printing
 	services.printing.enable = true;
@@ -103,26 +110,16 @@
 				];
 			};
 		};
-		git = 
-		{
-			enable = true;
-		};
 		neovim = 
 		{
 			enable = true;
 			defaultEditor = true;
-		};
-		firefox = 
-		{
-			enable = true;
 		};
 	};
 
 	# Pkgs
 	environment.systemPackages = with pkgs;
 	[
-		neovim										# Editor
-		zsh											# Shell
 		man-pages									# Man
 		gcc											# C-Utils
 		valgrind									# C-Utils
@@ -132,7 +129,6 @@
 		zlib										# C-Utils
 		openssl										# C-Utils
 		git											# Git
-		argocd										# GitOps
 		brave										# Browser
 		pciutils									# Utils
 		usbutils									# Utils
@@ -142,27 +138,18 @@
 		libGLU										# Utils
 		libGL										# Utils
 		nasm										# Asembly
-		docker										# Virtualisation
-		vagrant										# Virtualisation
-		k3s											# Virtualisation
-		k3d											# Virtualisation
-		kubernetes-helm								# Virtualisation
 		go											# Go
 		wget										# Networking
 		iw											# Networking
 		traceroute									# Networking
 		wireshark									# Networking
-		networkmanager								# Networking
 		curl										# Networking
 		inetutils									# Networking
 		tcpdump										# Networking
 		postman										# Networking
 		sshfs										# Networking
 		gtk4										# Graphics
-		linux-firmware								# Linux
-		linux										# Linux
 		xclip										# Linux
-		raspberrypi-eeprom							# Raspb
 		nixos-install-tools							# Raspb Nixos
 		rpi-imager									# Raspb imager
 		glances										# Resource Manager
@@ -239,13 +226,6 @@
 	#STEAM
 
 	programs.steam.enable = true;
-
-	hardware.opengl.enable = true;
-	hardware.opengl.driSupport32Bit = true;   # required for 32-bit games
-
-	# Firmware attemp
-	hardware.enableRedistributableFirmware = true;
-	hardware.enableAllFirmware = true;
 
 	# Fix graphics emulator
 	hardware.graphics = {
