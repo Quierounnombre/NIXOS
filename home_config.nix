@@ -17,6 +17,7 @@
 	boot.kernelPackages = pkgs.linuxPackages_latest;
 	boot.kernelParams = [ "quiet" "loglevel=3" ];
 	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; # NEEDED for vbox nested virt
+	boot.initrd.checkJournalingFS = false; # Disable initrd checking due to busy box failure.
 
 	# Network
 	networking.networkmanager.enable = true;
@@ -115,6 +116,10 @@
 			enable = true;
 			defaultEditor = true;
 		};
+		firefox = 
+		{
+			enable = true;
+		};
 	};
 
 	# Pkgs
@@ -160,6 +165,8 @@
 		nerd-fonts.fira-code						# NerdFonts
 		godotPackages_4_6.godot-mono				# Godot with c#
 		telegram-desktop							# Telegram
+		shotcut										# VideoEditor
+		kdePackages.okular										# PDFs
 	];
 
 	# Enviroment vars
@@ -174,6 +181,15 @@
 		docker =
 		{
 			enable = true;
+			daemon.settings =
+			{
+				dns =
+				[
+					"8.8.8.8"
+					"1.1.1.1"
+				];
+				registry-mirrors = ["https://mirror.gcr.io"];
+			};
 		};
 		virtualbox =
 		{
@@ -231,6 +247,9 @@
 	hardware.graphics = {
 		enable = true;
 	};
+
+	# Fix Intel or AMD infos on boot
+	hardware.cpu.intel.updateMicrocode = true;
 
 	# Allow unfree packages
 	nixpkgs.config.allowUnfree = true;
