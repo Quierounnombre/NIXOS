@@ -30,9 +30,17 @@ require("lazy").setup({
 				view                = { width = 30 },
 				sync_root_with_cwd  = true,
 				update_focused_file = { enable = true },
+				on_attach = function(bufnr)
+					local api = require("nvim-tree.api")
+					api.config.mappings.default_on_attach(bufnr)
+					vim.keymap.set("n", "t", api.node.open.tab, { buffer = bufnr, nowait = true })
+					vim.keymap.set("n", "<C-e>", api.tree.close, { buffer = bufnr, nowait = true })
+				end
 			})
 		end,
 	},
 	{ "echasnovski/mini.cursorword", version = "*", config = true },
 	{ "nvim-lua/plenary.nvim", lazy = true },
 })
+
+require("nvim-tree" )

@@ -10,7 +10,11 @@
 			cp ${./lua/plugins.lua}  /home/vicente/.config/nvim/lua/plugins.lua
 			cp ${./lua/keymaps.lua}  /home/vicente/.config/nvim/lua/keymaps.lua
 			cp ${./lua/ui.lua}       /home/vicente/.config/nvim/lua/ui.lua
-			chmod -R 0644 /home/vicente/.config/nvim
+			chown -R vicente:users /home/vicente/.config/nvim
+			chmod 0755 /home/vicente/.config/nvim
+			chmod 0755 /home/vicente/.config/nvim/lua
+			chmod 0644 /home/vicente/.config/nvim/*.lua
+			chmod 0644 /home/vicente/.config/nvim/lua/*.lua
 		'';
 	};
 

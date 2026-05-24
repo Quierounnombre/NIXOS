@@ -2,7 +2,15 @@ local map = vim.keymap.set
 
 map("i", "jk", "<Esc>")
 map({ "i", "n" }, "<C-s>", "<Esc>:update<CR>")
-map("n", "<C-e>", ":NvimTreeToggle<CR>")
+
+map("n", "<C-e>", function()
+	local view = require("nvim-tree.view")
+	if view.is_visible() then
+		require("nvim-tree.api").tree.close()
+	else
+		require("nvim-tree.api").tree.toggle()
+	end
+end)
 
 local term_bufnr = -1
  
@@ -27,3 +35,5 @@ end
 map("n", "<char-241>", toggle_terminal)
 map("t", "<char-241>", function() vim.cmd("stopinsert"); toggle_terminal() end)
 map("t", "<Esc>",      function() vim.cmd("stopinsert"); toggle_terminal() end)
+
+
