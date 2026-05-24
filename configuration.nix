@@ -5,215 +5,265 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+	imports =
+	[ # Include the results of the hardware scan.
+	./hardware-configuration.nix
+	./nvim.nix
+	];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+	# Bootloader.
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
+	boot.kernelPackages = pkgs.linuxPackages_latest;
+	boot.kernelParams = [ "quiet" "loglevel=3" ];
+	boot.blacklistedKernelModules = [ "kvm" "kvm_intel" ]; # NEEDED for vbox nested virt
+	boot.initrd.checkJournalingFS = false; # Disable initrd checking due to busy box failure.
 
-  networking.hostName = "Vicxos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+	# Network
+	networking.networkmanager.enable = true;
+	networking.hostName = "vicxos";
+	networking.firewall.enable = true;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+	#Flakes
+	nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Enable networking
-  networking.networkmanager.enable = true;
+	# Localization
+	time.timeZone = "Europe/Madrid";
+	i18n.defaultLocale = "es_ES.UTF-8";
+	i18n.extraLocaleSettings = 
+	{
+		LC_ADDRESS = "es_ES.UTF-8";
+		LC_IDENTIFICATION = "es_ES.UTF-8";
+		LC_MEASUREMENT = "es_ES.UTF-8";
+		LC_MONETARY = "es_ES.UTF-8";
+		LC_NAME = "es_ES.UTF-8";
+		LC_NUMERIC = "es_ES.UTF-8";
+		LC_PAPER = "es_ES.UTF-8";
+		LC_TELEPHONE = "es_ES.UTF-8";
+		LC_TIME = "es_ES.UTF-8";
+	};
+	console.keyMap = "es";
 
-  # Set your time zone.
-  time.timeZone = "Europe/Madrid";
+	# Graphics
+	services.xserver =
+	{
+		enable = true;
+		displayManager.lightdm.enable = true;
+		desktopManager.cinnamon.enable = true;
+		videoDrivers = [ "modsetting" ];
+		autoRepeatDelay = 200;
+		autoRepeatInterval = 50;
+		xkb = 
+		{
+			layout = "es";
+		};
+	};
+	security.polkit.enable = true;
+	services.gnome.gnome-keyring.enable = true;
+	xdg.portal = {
+		enable = true;
+		extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+		config.common.default = "gtk";
+	};
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+	# Printing
+	services.printing.enable = true;
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "es_ES.UTF-8";
-    LC_IDENTIFICATION = "es_ES.UTF-8";
-    LC_MEASUREMENT = "es_ES.UTF-8";
-    LC_MONETARY = "es_ES.UTF-8";
-    LC_NAME = "es_ES.UTF-8";
-    LC_NUMERIC = "es_ES.UTF-8";
-    LC_PAPER = "es_ES.UTF-8";
-    LC_TELEPHONE = "es_ES.UTF-8";
-    LC_TIME = "es_ES.UTF-8";
-  };
+	# Sound
+	services.pulseaudio.enable = false;
+	security.rtkit.enable = true;
+	services.pipewire =
+	{
+		enable = true;
+		alsa.enable = true;
+		alsa.support32Bit = true;
+		pulse.enable = true;
+	};
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+	# Me
+	users.users.vicente =
+	{
+		isNormalUser = true;
+		description = "Vicente";
+		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" "kvm" ];
+		packages = with pkgs;
+		[
+		];
+		shell = pkgs.zsh;
+	};
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
+	# Set up some programs
+	programs =
+	{
+		zsh = 
+		{
+			enable = true;
+			ohMyZsh = 
+			{
+				enable = true;
+				theme = "robbyrussell";
+				plugins = 
+				[
+					"sudo"
+					"terraform"
+					"systemadmin"
+					"vi-mode"
+				];
+			};
+		};
+		neovim = 
+		{
+			enable = true;
+			defaultEditor = true;
+		};
+		firefox = 
+		{
+			enable = true;
+		};
+	};
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "es";
-    variant = "nodeadkeys";
-  };
+	# Pkgs
+	environment.systemPackages = with pkgs;
+	[
+		man-pages									# Man
+		gcc											# C-Utils
+		valgrind									# C-Utils
+		linuxHeaders								# C-Utils
+		cmake										# C-Utils
+		gnumake										# C-Utils
+		zlib										# C-Utils
+		openssl										# C-Utils
+		git											# Git
+		brave										# Browser
+		pciutils									# Utils
+		usbutils									# Utils
+		parted										# Utils
+		unzip										# Utils
+		pkg-config									# Utils
+		libGLU										# Utils
+		libGL										# Utils
+		nasm										# Asembly
+		go											# Go
+		wget										# Networking
+		iw											# Networking
+		traceroute									# Networking
+		wireshark									# Networking
+		curl										# Networking
+		inetutils									# Networking
+		tcpdump										# Networking
+		postman										# Networking
+		sshfs										# Networking
+		gtk4										# Graphics
+		xclip										# Linux
+		nixos-install-tools							# Raspb Nixos
+		rpi-imager									# Raspb imager
+		glances										# Resource Manager
+		slack										# Office
+		cockatrice									# Gaming
+		libreoffice									# Productivity
+		typescript									# Typscript
+		nerd-fonts.fira-code						# NerdFonts
+		godotPackages_4_6.godot-mono				# Godot with c#
+		telegram-desktop							# Telegram
+		wine										# WINE
+	];
 
-  # Configure console keymap
-  console.keyMap = "es";
+	# Enviroment vars
+	environment.variables =
+	{
+		GTK_THEME = "Adwaita:dark"; #Dark theme
+	};
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+	# Virtualisation configs
+	virtualisation =
+	{
+		docker =
+		{
+			enable = true;
+			daemon.settings =
+			{
+				dns =
+				[
+					"8.8.8.8"
+					"1.1.1.1"
+				];
+				registry-mirrors = ["https://mirror.gcr.io"];
+			};
+		};
+		virtualbox =
+		{
+			host.enable = true;
+			host.enableExtensionPack = true;
+		};
+	};
 
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+	# Enviroment 
+	environment.etc =
+	{
+		"gitconfig".text =
+		''
+		[user]
+		name  = Quierounombre
+		email = vicengandrade@gmail.com
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+		[alias]
+		lol   = log --decorate --pretty --graph --stat
+		l     = log --decorate --pretty --oneline
+		s     = status -s --ahead-behind
+		sb    = status -s --ahead-behind -b
+		ac    = add *.c *.cpp *.h Makefile
+		aa    = add *
+		c     = commit -m
+		po    = push origin
+		pom   = push origin master
+		pov   = push origin Vicente
+		pp    = push personal
+		ppm   = push personal master
+		p     = push
+		r     = remote
+		b     = branch
+		ra    = remote add
+		rp    = remote add personal
+		ro    = remote add origin
+		ch    = checkout
+		cho   = checkout master
+		chv   = checkout Vicente
+		suba  = submodule add
+		subp  = submodule update --merge --remote
+		subc  = submodule update --init --recursive
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+		[status]
+		submodulesummary = true
+		'';
+		"gitconfig".mode = "0644";
+	};
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.vicente = {
-    isNormalUser = true;
-    description = "Vicente";
-    home = "/home/vicente";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-    #  thunderbird
-    ];
-    shell = pkgs.zsh;
-  };
+	#STEAM
 
- environment.etc = {
-    "gitconfig".text = ''
-      [user]
-        name  = Quierounombre
-        email = vicengandrade@gmail.com
+	programs.steam.enable = true;
 
-      [alias]
-        lol   = log --decorate --pretty --graph --stat
-        l     = log --decorate --pretty --oneline
-        s     = status -s --ahead-behind
-        sb    = status -s --ahead-behind -b
-        ac    = add *.c *.cpp *.h Makefile
-        aa    = add *
-        c     = commit -m
-        po    = push origin
-        pom   = push origin master
-        pov   = push origin Vicente
-        pp    = push personal
-        ppm   = push personal master
-        p     = push
-        r     = remote
-        b     = branch
-        ra    = remote add
-        rp    = remote add personal
-        ro    = remote add origin
-        ch    = checkout
-        cho   = checkout master
-        chv   = checkout Vicente
-        suba  = submodule add
-        subp  = submodule update --merge --remote
-        subc  = submodule update --init --recursive
+	# Fix graphics emulator
+	hardware.graphics = {
+		enable = true;
+	};
 
-      [status]
-        submodulesummary = true
-    '';
-    "gitconfig".mode = "0644";
-  };
+	# Fix Intel or AMD infos on boot
+	hardware.cpu.intel.updateMicrocode = true;
 
-  # Install firefox.
-  programs.firefox.enable = true;
+	# Allow unfree packages
+	nixpkgs.config.allowUnfree = true;
 
-  programs = 
-  {
-    zsh =
-    {
-      enable = true;
-      ohMyZsh =
-      {
-        enable = true;
-        theme = "robbyrussell";
-        plugins = 
-        [
-          "sudo"
-          "terraform"
-          "systemadmin"
-          "vi-mode"
-        ];
-      };
-    };
-    git = 
-    {
-      enable = true;
-    };
-  };
+	# Clean up
+	nix.gc.automatic = true;
+	nix.gc.dates = "weekly";
+	nix.gc.options = "--delete-older-than 30d";
 
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-	vscode
-	vim
-  linuxHeaders
-  gnumake
-  gcc
-  git
-  brave
-  zsh
-  python3
-  python3Packages.django
-  cmake
-  valgrind
-  man-pages
-  traceroute
-  wireshark
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-
-  #DELETING UNUSED FILES
-  nix.gc.automatic = true;
-  nix.gc.dates = "weekly";
-  nix.gc.options = "--delete-older-than 30d";
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+	# This value determines the NixOS release from which the default
+	# settings for stateful data, like file locations and database versions
+	# on your system were taken. It‘s perfectly fine and recommended to leave
+	# this value at the release version of the first install of this system.
+	# Before changing this value read the documentation for this option
+	# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+	system.stateVersion	= "25.05"; # Did you read the comment?
 
 }
