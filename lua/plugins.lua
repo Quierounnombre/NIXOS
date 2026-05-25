@@ -73,29 +73,25 @@ local on_attach = function(_, bufnr)
 	end, {})
 end
 
-local = 5
-
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-vim.lsp.config("gopls", { on_attach = on_attach, capabilities = capabilities, cmd = { "gopls" } })
-vim.lsp.config("clangd", { on_attach = on_attach, capabilities = capabilities, cmd = { "clangd" } })
-vim.lsp.config("lua_ls", {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	cmd = { "lua-language-server" },
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			workspace = {
-				checkThirdParty = false,
-				library = vim.api.nvim_get_runtime_file("", true),
-			},
-			telemetry = { enable = false },
-		},
-	},
-})
 vim.lsp.config("nixd", { on_attach = on_attach, capabilities = capabilities, cmd = { "nixd"} })
-vim.lsp.enable({ "gopls", "clangd", "lua_ls", "nixd" })
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "go",
+	callback = function() vim.lsp.start({ name = "gopls", cmd = { "gopls" }, on_attach = on_attach, capabilities = capabilities }) end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "cpp" },
+	callback = function() vim.lsp.start({ name = "clangd", cmd = { "clangd" }, on_attach = on_attach, capabilities = capabilities }) end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "lua",
+	callback = function() vim.lsp.start({ name = "lua_ls", cmd = { "lua-language-server" }, on_attach = on_attach, capabilities = capabilities }) end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "nix",
+	callback = function() vim.lsp.start({ name = "nixd", cmd = { "nixd" }, on_attach = on_attach, capabilities = capabilities }) end,
+})
 
 local cmp = require('cmp')
 local luasnip = require('luasnip')
