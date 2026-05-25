@@ -1,5 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
+# Edit this configuration file to define what should be installed on your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
@@ -166,6 +165,10 @@
 		godotPackages_4_6.godot-mono				# Godot with c#
 		telegram-desktop							# Telegram
 		wine										# WINE
+		lua-language-server							# LSP
+		gopls										# LSP
+		nixd										# LSP
+		clang-tools									# LSP
 	];
 
 	# Enviroment vars

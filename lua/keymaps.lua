@@ -1,5 +1,7 @@
 local map = vim.keymap.set
 
+vim.g.mapleader = " "
+
 map("i", "jk", "<Esc>")
 map({ "i", "n" }, "<C-s>", "<Esc>:update<CR>")
 
@@ -13,7 +15,7 @@ map("n", "<C-e>", function()
 end)
 
 local term_bufnr = -1
- 
+
 local function toggle_terminal()
 	if term_bufnr ~= -1 and vim.fn.bufexists(term_bufnr) == 1 then
 		local win = vim.fn.bufwinnr(term_bufnr)
@@ -35,5 +37,3 @@ end
 map("n", "<char-241>", toggle_terminal)
 map("t", "<char-241>", function() vim.cmd("stopinsert"); toggle_terminal() end)
 map("t", "<Esc>",      function() vim.cmd("stopinsert"); toggle_terminal() end)
-
-
