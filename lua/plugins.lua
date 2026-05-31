@@ -35,6 +35,8 @@ require("lazy").setup({
 					api.config.mappings.default_on_attach(bufnr)
 					vim.keymap.set("n", "t", api.node.open.tab, { buffer = bufnr, nowait = true })
 					vim.keymap.set("n", "<C-e>", api.tree.close, { buffer = bufnr, nowait = true })
+					vim.keymap.set("n", "l", api.tree.change_root_to_node, { buffer = bufnr, nowait = true })
+					vim.keymap.set("n", "h", api.tree.change_root_to_parent, { buffer = bufnr, nowait = true })
 				end
 			})
 		end,
@@ -67,6 +69,7 @@ local on_attach = function(_, bufnr)
 	bufmap('[d', vim.diagnostic.goto_prev)
 	bufmap(']d', vim.diagnostic.goto_next)
 	bufmap('<leader>e', vim.diagnostic.open_float)
+
 
 	vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
 		vim.lsp.buf.format()
