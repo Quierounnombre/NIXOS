@@ -49,7 +49,7 @@
 		enable = true;
 		displayManager.lightdm.enable = true;
 		desktopManager.cinnamon.enable = true;
-		videoDrivers = [ "modsetting" ];
+		videoDrivers = [];
 		autoRepeatDelay = 200;
 		autoRepeatInterval = 50;
 		xkb = 
@@ -167,6 +167,7 @@
 		wine										# WINE
 		lua-language-server							# LSP
 		gopls										# LSP
+		dockerfile-language-server					# LSP
 		nixd										# LSP
 		clang-tools									# LSP
 	];
