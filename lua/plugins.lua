@@ -97,7 +97,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "dockerfile",
-	callback = function() vim.lsp.start({ name = "dockerls", cmd = { "docker-langserver" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function() vim.lsp.start({ name = "dockerls", cmd = { "docker-langserver", "--stdio" }, on_attach = on_attach, capabilities = capabilities }) end,
 })
 
 local cmp = require('cmp')

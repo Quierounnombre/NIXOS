@@ -245,6 +245,8 @@
 	#STEAM
 
 	programs.steam.enable = true;
+	hardware.graphics.enable32Bit = true;
+
 
 	# Fix graphics emulator
 	hardware.graphics = {
