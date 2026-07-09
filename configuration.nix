@@ -84,7 +84,14 @@
 	{
 		isNormalUser = true;
 		description = "Vicente";
-		extraGroups = [ "networkmanager" "wheel" "docker" "vboxusers" "kvm" ];
+		extraGroups = [
+			"networkmanager"
+			"wheel"
+			"docker"
+			"vboxusers"
+			"kvm"
+			"wireshark"
+		];
 		packages = with pkgs;
 		[
 		];
@@ -119,6 +126,10 @@
 		{
 			enable = true;
 		};
+		wireshark = 
+		{
+			enable = true;
+		};
 	};
 
 	# Pkgs
@@ -146,12 +157,12 @@
 		wget										# Networking
 		iw											# Networking
 		traceroute									# Networking
-		wireshark									# Networking
 		curl										# Networking
 		inetutils									# Networking
 		tcpdump										# Networking
 		postman										# Networking
 		sshfs										# Networking
+		wireshark									# Networking
 		gtk4										# Graphics
 		xclip										# Linux
 		nixos-install-tools							# Raspb Nixos
@@ -170,6 +181,7 @@
 		dockerfile-language-server					# LSP
 		nixd										# LSP
 		clang-tools									# LSP
+		theharvester								# OSINT
 	];
 
 	# Enviroment vars
