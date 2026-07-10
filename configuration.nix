@@ -152,6 +152,7 @@
 		pkg-config									# Utils
 		libGLU										# Utils
 		libGL										# Utils
+		file										# Utils
 		nasm										# Asembly
 		go											# Go
 		wget										# Networking
@@ -182,6 +183,7 @@
 		nixd										# LSP
 		clang-tools									# LSP
 		theharvester								# OSINT
+		dig											# OSINT
 	];
 
 	# Enviroment vars
