@@ -184,6 +184,7 @@
 		clang-tools									# LSP
 		theharvester								# OSINT
 		dig											# OSINT
+		steghide									# OSINT
 	];
 
 	# Enviroment vars
