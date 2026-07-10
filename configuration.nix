@@ -185,6 +185,7 @@
 		theharvester								# OSINT
 		dig											# OSINT
 		steghide									# OSINT
+		fcrackzip									# OSINT
 	];
 
 	# Enviroment vars
