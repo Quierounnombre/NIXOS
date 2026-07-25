@@ -186,6 +186,8 @@
 		dig											# OSINT
 		steghide									# OSINT
 		fcrackzip									# OSINT
+		tor-browser									# OSINT
+		lunar-client								# MC
 	];
 
 	# Enviroment vars
