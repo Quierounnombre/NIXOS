@@ -112,7 +112,6 @@
 				[
 					"sudo"
 					"terraform"
-					"systemadmin"
 					"vi-mode"
 				];
 			};
@@ -153,6 +152,8 @@
 		libGLU										# Utils
 		libGL										# Utils
 		file										# Utils
+		tree										# Utils
+		vegeta										# Testing
 		nasm										# Asembly
 		go											# Go
 		wget										# Networking
@@ -171,6 +172,7 @@
 		glances										# Resource Manager
 		slack										# Office
 		cockatrice									# Gaming
+		openra										# Gaming
 		libreoffice									# Productivity
 		typescript									# Typscript
 		nerd-fonts.fira-code						# NerdFonts
