@@ -69,6 +69,7 @@ local on_attach = function(_, bufnr)
 	bufmap('[d', vim.diagnostic.goto_prev)
 	bufmap(']d', vim.diagnostic.goto_next)
 	bufmap('<leader>e', vim.diagnostic.open_float)
+	bufmap('gr', vim.lsp.buf.references)
 
 
 	vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -81,23 +82,63 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 vim.lsp.config("nixd", { on_attach = on_attach, capabilities = capabilities, cmd = { "nixd"} })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "go",
-	callback = function() vim.lsp.start({ name = "gopls", cmd = { "gopls" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function()
+		vim.lsp.start({
+			name = "gopls",
+			cmd = { "gopls" },
+			on_attach = on_attach,
+			capabilities = capabilities,
+			root_dir = vim.fs.dirname(vim.fs.find({"go.mod", ".git"}, { upward = true })[1])
+		})
+	end,
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp" },
-	callback = function() vim.lsp.start({ name = "clangd", cmd = { "clangd" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function()
+		vim.lsp.start({
+			name = "clangd",
+			cmd = { "clangd" },
+			root_dir = vim.fs.dirname(vim.fs.find({"compile_commands.json", ".git"}, { upward = true })[1]),
+			on_attach = on_attach,
+			capabilities = capabilities,
+		})
+	end,
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "lua",
-	callback = function() vim.lsp.start({ name = "lua_ls", cmd = { "lua-language-server" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function()
+		vim.lsp.start({
+			name = "lua_ls",
+			cmd = { "lua-language-server" },
+			root_dir = vim.fs.dirname(vim.fs.find({".luarc.json", ".git"}, { upward = true })[1]),
+			on_attach = on_attach,
+			capabilities = capabilities,
+		})
+	end,
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "nix",
-	callback = function() vim.lsp.start({ name = "nixd", cmd = { "nixd" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function()
+		vim.lsp.start({
+			name = "nixd",
+			cmd = { "nixd" },
+			root_dir = vim.fs.dirname(vim.fs.find({"flake.nix", ".git"}, { upward = true })[1]),
+			on_attach = on_attach,
+			capabilities = capabilities,
+		})
+	end,
 })
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "dockerfile",
-	callback = function() vim.lsp.start({ name = "dockerls", cmd = { "docker-langserver", "--stdio" }, on_attach = on_attach, capabilities = capabilities }) end,
+	callback = function()
+		vim.lsp.start({
+			name = "dockerls",
+			cmd = { "docker-langserver", "--stdio" },
+			root_dir = vim.fs.dirname(vim.fs.find({"Dockerfile", ".git"}, { upward = true })[1]),
+			on_attach = on_attach,
+			capabilities = capabilities,
+		})
+	end,
 })
 
 local cmp = require('cmp')

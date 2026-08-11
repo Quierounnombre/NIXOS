@@ -153,9 +153,11 @@
 		libGL										# Utils
 		file										# Utils
 		tree										# Utils
+		jq											# Utils
 		vegeta										# Testing
 		nasm										# Asembly
 		go											# Go
+		python3										# Python
 		wget										# Networking
 		iw											# Networking
 		traceroute									# Networking
