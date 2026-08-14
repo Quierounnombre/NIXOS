@@ -192,6 +192,7 @@
 		fcrackzip									# OSINT
 		tor-browser									# OSINT
 		lunar-client								# MC
+		ollama										# LLM
 	];
 
 	# Enviroment vars
