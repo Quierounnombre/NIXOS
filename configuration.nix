@@ -154,6 +154,7 @@
 		file										# Utils
 		tree										# Utils
 		jq											# Utils
+		htop										# Utils
 		vegeta										# Testing
 		nasm										# Asembly
 		go											# Go
@@ -193,6 +194,7 @@
 		tor-browser									# OSINT
 		lunar-client								# MC
 		ollama										# LLM
+		aider-chat									# LLM
 	];
 
 	# Enviroment vars
